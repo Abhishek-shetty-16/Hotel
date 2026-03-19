@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Login - Prakruthi Refreshment{% endblock %}
+{% block extra_css %}
+<style>
+  .auth-container { max-width: 440px; margin: 4rem auto; }
+  .auth-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; }
+  .auth-logo { text-align: center; margin-bottom: 2rem; }
+  .auth-logo .logo-icon { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+  .auth-logo h2 { font-family: 'Playfair Display', serif; color: var(--green-dark); font-size: 1.7rem; }
+  .auth-logo p { color: var(--text-muted); font-size: 0.9rem; }
+  .form-group { margin-bottom: 1.3rem; }
+  .form-group label { display: block; font-weight: 600; font-size: 0.88rem; color: var(--green-dark); margin-bottom: 6px; }
+  .form-group input {
+    width: 100%; padding: 12px 14px;
+    border: 2px solid #e8f5e9; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-group input:focus { border-color: var(--green-mid); }
+  .auth-btn {
+    width: 100%; padding: 14px;
+    background: var(--green-mid); color: #fff; border: none;
+    border-radius: 12px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: background 0.2s; margin-top: 0.5rem;
+  }
+  .auth-btn:hover { background: var(--green-dark); }
+  .auth-link { text-align: center; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem; }
+  .auth-link a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+  .auth-link a:hover { text-decoration: underline; }
+  .phone-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="logo-icon">🌿</span>
+        <h2>Welcome Back!</h2>
+        <p>Sign in to Prakruthi Refreshment</p>
+      </div>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" name="phone" placeholder="Enter your phone number" required autofocus>
+          <div class="phone-hint">Enter the phone number you registered with</div>
+        </div>
+        <button type="submit" class="auth-btn">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
+      </form>
+      <div class="auth-link">
+        Don't have an account? <a href="/register/">Register here</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Dashboard - Admin{% endblock %}
+{% block nav_dash %}active{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Overview of Prakruthi Refreshment{% endblock %}
+
+{% block extra_css %}
+<style>
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+  .stat-card {
+    background: #fff; border-radius: var(--radius); padding: 1.8rem;
+    box-shadow: var(--shadow); display: flex; align-items: center; gap: 1.2rem;
+    border-left: 5px solid;
+  }
+  .stat-card.green { border-color: var(--green-mid); }
+  .stat-card.orange { border-color: var(--saffron); }
+  .stat-card.blue { border-color: #3b82f6; }
+  .stat-card.purple { border-color: #8b5cf6; }
+  .stat-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+  }
+  .stat-card.green .stat-icon { background: #d1fae5; }
+  .stat-card.orange .stat-icon { background: #fed7aa; }
+  .stat-card.blue .stat-icon { background: #dbeafe; }
+  .stat-card.purple .stat-icon { background: #ede9fe; }
+  .stat-info .value { font-size: 1.9rem; font-weight: 700; color: var(--green-dark); line-height: 1; margin-bottom: 4px; }
+  .stat-info .label { color: var(--text-muted); font-size: 0.85rem; }
+
+  .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .orders-table-wrap { overflow-x: auto; }
+
+  .status-chip { display: inline-block; }
+  .quick-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  @media(max-width:1024px) {
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .dashboard-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-card green">
+    <div class="stat-icon">📦</div>
+    <div class="stat-info">
+      <div class="value">{{ stats.total_orders|default:0 }}</div>
+      <div class="label">Total Orders</div>
+    </div>
+  </div>
+  <div class="stat-card orange">
+    <div class="stat-icon">💰</div>
+    <div class="stat-info">
+      <div class="value">₹{{ stats.total_revenue|default:0|floatformat:0 }}</div>
+      <div class="label">Total Revenue</div>
+    </div>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-icon">⏳</div>
+    <div class="stat-info">
+      <div class="value">{{ stats.pending_orders|default:0 }}</div>
+      <div class="label">Pending Orders</div>
+    </div>
+  </div>
+  <div class="stat-card purple">
+    <div class="stat-icon">🍽️</div>
+    <div class="stat-info">
+      <div class="value">{{ stats.active_menu_items|default:0 }}</div>
+      <div class="label">Active Menu Items</div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- Recent Orders -->
+  <div class="card" style="grid-column: 1 / -1">
+    <div class="card-header">
+      <h3>Recent Orders</h3>
+      <a href="/admin-panel/orders/" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div class="orders-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Amount</th>
+            <th>Order Status</th>
+            <th>Payment</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in recent_orders %}
+          <tr>
+            <td><strong>#{{ order.order_id }}</strong></td>
+            <td>{{ order.customer_name|default:"—" }}</td>
+            <td><strong>₹{{ order.total_amount }}</strong></td>
+            <td><span class="badge badge-{{ order.order_status }}">{{ order.order_status|title }}</span></td>
+            <td><span class="badge badge-{% if order.payment_status == 'paid' %}paid{% else %}unpaid{% endif %}">{{ order.payment_status|title }}</span></td>
+            <td style="color:var(--text-muted); font-size:0.82rem">{{ order.created_at }}</td>
+            <td>
+              <a href="/admin-panel/orders/?highlight={{ order.order_id }}" class="btn btn-primary btn-xs">
+                Manage
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:2rem">No orders yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

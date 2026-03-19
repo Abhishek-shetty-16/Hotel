@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block title %}Order Confirmed - Prakruthi Refreshment{% endblock %}
+
+{% block extra_css %}
+<style>
+  .success-container { max-width: 600px; margin: 3rem auto; text-align: center; }
+  .success-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); padding: 3rem 2.5rem; }
+  .success-icon { font-size: 5rem; animation: bounce 0.6s ease; margin-bottom: 1rem; }
+  @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+  .success-card h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--green-dark); margin-bottom: 0.5rem; }
+  .success-card > p { color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem; }
+
+  .order-details { background: #f9fdf9; border-radius: 12px; padding: 1.5rem; text-align: left; margin-bottom: 2rem; }
+  .od-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #e8f5e9; font-size: 0.93rem; }
+  .od-row:last-child { border: none; }
+  .od-row .label { color: var(--text-muted); }
+  .od-row .value { font-weight: 600; color: var(--green-dark); }
+
+  .order-items-list { margin: 1.5rem 0; text-align: left; }
+  .oi-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid #f0f9f4;
+    font-size: 0.9rem;
+  }
+  .oi-item:last-child { border: none; }
+  .oi-item-name { font-weight: 500; }
+  .oi-item-qty { color: var(--text-muted); font-size: 0.82rem; }
+  .oi-item-price { font-weight: 700; color: var(--saffron); }
+
+  .status-tracker {
+    display: flex; justify-content: space-between;
+    position: relative; margin: 2rem 0;
+    padding: 0 1rem;
+  }
+  .status-tracker::before {
+    content: ''; position: absolute;
+    top: 20px; left: 10%; right: 10%;
+    height: 3px; background: var(--green-pale); z-index: 0;
+  }
+  .status-step { text-align: center; position: relative; z-index: 1; flex: 1; }
+  .step-icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 8px; font-size: 1.1rem;
+    background: var(--green-pale); color: var(--green-mid);
+  }
+  .step-icon.active { background: var(--green-mid); color: #fff; }
+  .step-label { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
+
+  .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="success-container">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <h2>Order Confirmed!</h2>
+      <p>Thank you for your order! We're preparing your delicious food right now.</p>
+
+      <div class="status-tracker">
+        <div class="status-step">
+          <div class="step-icon active">✅</div>
+          <div class="step-label">Order Placed</div>
+        </div>
+        <div class="status-step">
+          <div class="step-icon {% if order.order_status != 'pending' %}active{% endif %}">👨‍🍳</div>
+          <div class="step-label">Preparing</div>
+        </div>
+        <div class="status-step">
+          <div class="step-icon {% if order.order_status == 'ready' or order.order_status == 'delivered' %}active{% endif %}">🛵</div>
+          <div class="step-label">Ready</div>
+        </div>
+        <div class="status-step">
+          <div class="step-icon {% if order.order_status == 'delivered' %}active{% endif %}">🏠</div>
+          <div class="step-label">Delivered</div>
+        </div>
+      </div>
+
+      <div class="order-details">
+        <div class="od-row">
+          <span class="label">Order ID</span>
+          <span class="value">#{{ order.order_id }}</span>
+        </div>
+        <div class="od-row">
+          <span class="label">Order Status</span>
+          <span class="value badge badge-{{ order.order_status }}">{{ order.order_status|title }}</span>
+        </div>
+        <div class="od-row">
+          <span class="label">Payment Status</span>
+          <span class="value badge badge-{% if order.payment_status == 'paid' %}paid{% else %}unpaid{% endif %}">
+            {{ order.payment_status|title }}
+          </span>
+        </div>
+        <div class="od-row">
+          <span class="label">Total Amount</span>
+          <span class="value" style="color:var(--saffron); font-size:1.1rem">₹{{ order.total_amount }}</span>
+        </div>
+      </div>
+
+      {% if order.order_items %}
+      <div class="order-items-list">
+        <h4 style="margin-bottom:1rem; color:var(--green-dark)">Your Items</h4>
+        {% for item in order.order_items %}
+        <div class="oi-item">
+          <div>
+            <div class="oi-item-name">{{ item.item_name }}</div>
+            <div class="oi-item-qty">× {{ item.quantity }}</div>
+          </div>
+          <div class="oi-item-price">₹{{ item.price }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="cta-btns">
+        <a href="/my-orders/" class="btn btn-primary">
+          <i class="fas fa-receipt"></i> View My Orders
+        </a>
+        <a href="/menu/" class="btn btn-outline">
+          <i class="fas fa-utensils"></i> Order Again
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

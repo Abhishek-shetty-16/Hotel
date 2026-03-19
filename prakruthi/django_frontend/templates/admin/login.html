@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Prakruthi Refreshment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root { --green-dark:#1a3a2a; --green-mid:#2d6a4f; --green-light:#52b788; --saffron:#e76f51; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--green-dark) 0%, #1d5a40 50%, var(--green-mid) 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .login-card {
+      background: #fff; border-radius: 20px; padding: 3rem;
+      width: 100%; max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .login-logo { text-align: center; margin-bottom: 2rem; }
+    .login-logo .icon { font-size: 3.5rem; display: block; margin-bottom: 0.5rem; }
+    .login-logo h1 { font-family: 'Playfair Display', serif; color: var(--green-dark); font-size: 1.8rem; }
+    .login-logo p { color: #6b7280; font-size: 0.9rem; margin-top: 4px; }
+    .admin-badge {
+      display: inline-block; background: #fef3c7; color: #92400e;
+      padding: 3px 14px; border-radius: 20px; font-size: 0.75rem;
+      font-weight: 600; margin-top: 6px;
+    }
+    .form-group { margin-bottom: 1.3rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.88rem; color: var(--green-dark); margin-bottom: 6px; }
+    .input-wrap { position: relative; }
+    .input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
+    .form-group input {
+      width: 100%; padding: 12px 14px 12px 40px;
+      border: 2px solid #e8f5e9; border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--green-mid); }
+    .login-btn {
+      width: 100%; padding: 14px;
+      background: var(--green-dark); color: #fff; border: none;
+      border-radius: 12px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .login-btn:hover { background: var(--green-mid); }
+    .back-link { display: block; text-align: center; margin-top: 1.5rem; color: #6b7280; font-size: 0.88rem; text-decoration: none; }
+    .back-link:hover { color: var(--green-mid); }
+    .alert { padding: 12px 16px; border-radius: 9px; margin-bottom: 1rem; font-size: 0.88rem; font-weight: 500; }
+    .alert-error { background: #fee2e2; color: #991b1b; border-left: 4px solid #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="icon">🌿</span>
+      <h1>Prakruthi</h1>
+      <p>Refreshment — Management</p>
+      <span class="admin-badge">🔐 Admin Access</span>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-error">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <i class="fas fa-user"></i>
+          <input type="text" name="username" placeholder="Admin username" required autofocus>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+      </div>
+      <button type="submit" class="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Sign In to Admin
+      </button>
+    </form>
+    <a href="/" class="back-link">← Back to website</a>
+  </div>
+</body>
+</html>
